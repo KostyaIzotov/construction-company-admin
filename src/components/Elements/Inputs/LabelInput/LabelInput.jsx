@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { TextField, Typography } from '@mui/material';
-import propStyles from '../../../resources/propStyles';
+import propStyles from '../../../../resources/propStyles';
 
 const LabelInput = ({ value, setValue, label, type = 'text', error }) => {
   return (

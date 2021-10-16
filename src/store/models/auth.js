@@ -15,8 +15,8 @@ const auth = {
     },
   },
   effects: (dispatch) => ({
-    changeAuthStatus(payload, rootState) {
-      console.log(rootState.count.count);
+    changeAuthStatus(payload, state) {
+      console.log(state.count.count);
       dispatch.auth.updateAuthStatus(payload);
     },
   }),

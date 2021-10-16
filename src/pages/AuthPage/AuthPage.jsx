@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { connect } from 'react-redux';
 
 import { Grid, Box, Typography, Button, Checkbox } from '@mui/material';
-import LabelInput from '../../components/Inputs/LabelInput';
+import LabelInput from '../../components/Elements/Inputs/LabelInput';
 import propStyles from '../../resources/propStyles';
 import ActionGrayLabel from '../../components/Elements/ActionGrayLabel';
 
@@ -32,8 +32,6 @@ const AuthPage = ({ updateAuthStatus }) => {
 
     if (!!phoneErr || !!passwordErr) return;
 
-    setPhoneErr('');
-    setPasswordError('');
     updateAuthStatus(true);
   };
 
