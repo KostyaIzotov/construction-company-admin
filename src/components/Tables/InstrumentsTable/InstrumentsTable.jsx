@@ -11,12 +11,12 @@ import {
   TableCell,
   TableContainer,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 import ButtonAddTable from '../../Elements/Buttons/ButtonAddTable';
 import Spinner from '../../Spinner/Spinner';
 import ActionInstrumentsModal from '../../Modals/ActionInstrumentsModal';
 import Buttondeletetable from '../../Elements/Buttons/ButtonDeleteTable/ButtonDeleteTable';
+import ConfirmDeleteModal from '../../Modals/ConfirmDeleteModal/ConfirmDeleteModal';
 
 const InstrumentsTable = ({
   instrumentsList,
@@ -27,7 +27,9 @@ const InstrumentsTable = ({
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [showModal, setShowModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [instrument, setInstrument] = useState(null);
+  const [instrumentId, setInstrumentId] = useState(null);
 
   useEffect(() => {
     getInstrumentsList();
@@ -45,6 +47,11 @@ const InstrumentsTable = ({
   const openModal = (item) => {
     setInstrument(item);
     setShowModal(true);
+  };
+
+  const openDeleteModal = (id) => {
+    setInstrumentId(id);
+    setShowDeleteModal(true);
   };
 
   return (
@@ -93,7 +100,7 @@ const InstrumentsTable = ({
                           <Buttondeletetable
                             actionFn={(e) => {
                               e.stopPropagation();
-                              deleteInstruments(instrument.id);
+                              openDeleteModal(instrument.id);
                             }}
                           />
                         </TableCell>
@@ -104,6 +111,7 @@ const InstrumentsTable = ({
           </Table>
         </TableContainer>
         <TablePagination
+          labelRowsPerPage='Кол-во записей на странице:'
           rowsPerPageOptions={[10, 25, 100]}
           component='div'
           count={instrumentsList.length}
@@ -118,6 +126,12 @@ const InstrumentsTable = ({
         open={showModal}
         setOpen={setShowModal}
         data={instrument}
+      />
+      <ConfirmDeleteModal
+        id={instrumentId}
+        deleteItem={deleteInstruments}
+        open={showDeleteModal}
+        setOpen={setShowDeleteModal}
       />
     </>
   );

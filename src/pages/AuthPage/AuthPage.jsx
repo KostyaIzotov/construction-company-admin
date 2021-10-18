@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 
 import { Grid, Box, Typography, Button, Checkbox } from '@mui/material';
@@ -6,12 +6,24 @@ import LabelInput from '../../components/Elements/Inputs/LabelInput';
 import propStyles from '../../resources/propStyles';
 import ActionGrayLabel from '../../components/Elements/ActionGrayLabel';
 
-const AuthPage = ({ updateAuthStatus }) => {
+const AuthPage = ({ loginUser }) => {
   const [phone, setPhone] = useState('');
   const [phoneError, setPhoneErr] = useState('');
   const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [saveData, setSaveData] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem('userAuthData')) {
+      const { phone, password, saveData } = JSON.parse(
+        localStorage.getItem('userAuthData')
+      );
+
+      setPhone(phone);
+      setPassword(password);
+      setSaveData(saveData);
+    }
+  }, []);
 
   const authUser = (e) => {
     e.preventDefault();
@@ -20,8 +32,8 @@ const AuthPage = ({ updateAuthStatus }) => {
       passwordErr = password;
 
     phoneErr =
-      phone.length <= 10
-        ? 'Минимальная длина номера телефона 10 символов!'
+      phone.length <= 11
+        ? 'Минимальная длина номера телефона 12 символов!'
         : '';
 
     passwordErr =
@@ -32,7 +44,7 @@ const AuthPage = ({ updateAuthStatus }) => {
 
     if (!!phoneErr || !!passwordErr) return;
 
-    updateAuthStatus(true);
+    loginUser({ phone, password, saveData });
   };
 
   return (
@@ -130,7 +142,7 @@ const AuthPage = ({ updateAuthStatus }) => {
 };
 
 const mapDispatch = (dispatch) => ({
-  updateAuthStatus: (status) => dispatch.auth.updateAuthStatus(status),
+  loginUser: (data) => dispatch.auth.loginUser(data),
 });
 
 export default connect(null, mapDispatch)(AuthPage);

@@ -63,7 +63,7 @@ const DrawerLayout = ({ isOpenDrawer }) => {
         <DrawerListItem
           path='/'
           isOpenDrawer={isOpenDrawer}
-          label='Главная'
+          label='Компании'
           icon={<HomeWorkIcon />}
         />
         <DrawerListItem

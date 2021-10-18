@@ -44,7 +44,7 @@ const authRoutes = [
 const Routes = ({ isAuth, isOpenDrawer }) => {
   return (
     <Switch>
-      {isAuth ? (
+      {!isAuth ? (
         <>
           <Redirect to='/auth' />
           {authRoutes.map(({ path, component }, i) => (
@@ -53,7 +53,7 @@ const Routes = ({ isAuth, isOpenDrawer }) => {
         </>
       ) : (
         <>
-          {/* <Redirect to='/' exact /> */}
+          <Redirect to='/' exact />
           <Box sx={{ display: 'flex' }}>
             <Header isOpenDrawer={isOpenDrawer} />
             <DrawerLayout isOpenDrawer={isOpenDrawer} />

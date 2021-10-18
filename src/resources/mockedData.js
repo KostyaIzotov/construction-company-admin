@@ -18,5 +18,37 @@ for (let i = 0; i <= 100; i++) {
     name: 'Болгарка',
     worker: 'Петр Петров',
     serial: 'LT-93321321',
+    stories: [
+      {
+        workerName: 'Иван Иванов',
+        dateOfReceiving: '25.01.2021',
+        dateOfDelivery: '27.01.2021',
+      },
+      {
+        workerName: 'Петр Петров',
+        dateOfReceiving: '25.01.2021',
+        dateOfDelivery: '27.01.2021',
+      },
+      {
+        workerName: 'Василий Васильев',
+        dateOfReceiving: '25.01.2021',
+        dateOfDelivery: '27.01.2021',
+      },
+      {
+        workerName: 'Константин Константинов',
+        dateOfReceiving: '25.01.2021',
+        dateOfDelivery: '27.01.2021',
+      },
+    ],
+  });
+}
+
+export const companies = [];
+
+for (let i = 0; i <= 100; i++) {
+  companies.push({
+    id: i,
+    name: 'ЦИТ',
+    password: '********',
   });
 }

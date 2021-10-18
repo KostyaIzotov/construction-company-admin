@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import {
   Box,
@@ -13,7 +14,7 @@ import PopupState, { bindTrigger, bindPopover } from 'material-ui-popup-state';
 
 import propStyles from '../../resources/propStyles';
 
-const HeaderPopup = () => {
+const HeaderPopup = ({ logoutUser }) => {
   return (
     <PopupState variant='popover' popupId='demo-popup-popover'>
       {(popupState) => (
@@ -42,6 +43,7 @@ const HeaderPopup = () => {
           >
             <List>
               <ListItem
+                onClick={logoutUser}
                 sx={{ width: 140, ...propStyles.centerBlock }}
                 disablePadding
               >
@@ -57,4 +59,8 @@ const HeaderPopup = () => {
   );
 };
 
-export default HeaderPopup;
+const mapDispatch = (dispatch) => ({
+  logoutUser: () => dispatch.auth.logoutUser(),
+});
+
+export default connect(null, mapDispatch)(HeaderPopup);

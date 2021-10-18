@@ -1,4 +1,5 @@
 import { instruments as instrumentsData } from '../../resources/mockedData';
+import { editList } from '../../resources/utils';
 
 const state = {
   instrumentsList: [],
@@ -30,7 +31,7 @@ const instruments = {
         setTimeout(() => {
           dispatch.instruments.updateInstrumentsList(instrumentsData);
           dispatch.instruments.setLoading(false);
-        }, 3000);
+        }, 1000);
       } catch (e) {
       } finally {
         // dispatch.instruments.setLoading(false);
@@ -42,26 +43,56 @@ const instruments = {
           payload,
           ...instrumentsList,
         ]);
+
+        dispatch.notify.createMessage({
+          message: 'Инструмент успешно добавлен!',
+          type: 'success',
+          open: true,
+        });
       } catch (e) {
-        console.log(e);
+        dispatch.notify.createMessage({
+          message: 'Ошибка при добавлении инструмента!',
+          type: 'error',
+          open: true,
+        });
       }
     },
     editInstrument(payload, { instruments: { instrumentsList } }) {
       try {
-        const idx = instrumentsList.findIndex((el) => el.id === payload.id),
-          instruments = [
-            ...instrumentsList.slice(0, idx),
-            payload,
-            ...instrumentsList.slice(idx + 1),
-          ];
-
-        dispatch.instruments.updateInstrumentsList(instruments);
-      } catch (e) {}
+        dispatch.instruments.updateInstrumentsList(
+          editList(payload, instrumentsList)
+        );
+        dispatch.notify.createMessage({
+          message: 'Инструмент успешно отредактирован!',
+          type: 'success',
+          open: true,
+        });
+      } catch (e) {
+        dispatch.notify.createMessage({
+          message: 'Ошибка при редактировании инструмента!',
+          type: 'error',
+          open: true,
+        });
+      }
     },
     deleteInstruments(id, { instruments: { instrumentsList } }) {
-      dispatch.instruments.updateInstrumentsList(
-        instrumentsList.filter((el) => el.id !== id)
-      );
+      try {
+        dispatch.instruments.updateInstrumentsList(
+          instrumentsList.filter((el) => el.id !== id)
+        );
+
+        dispatch.notify.createMessage({
+          message: 'Инстумент успешно удален!',
+          type: 'success',
+          open: true,
+        });
+      } catch (e) {
+        dispatch.notify.createMessage({
+          message: 'Ошибка при удалении инструмента!',
+          type: 'error',
+          open: true,
+        });
+      }
     },
   }),
 };

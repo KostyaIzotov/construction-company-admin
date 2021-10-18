@@ -1,12 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { connect } from 'react-redux';
 
 import { makeStyles } from '@mui/styles';
-import { Dialog, DialogContent, DialogActions, Grid, Box } from '@mui/material';
+import {
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Grid,
+  Box,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from '@mui/material';
 
 import LabelInput from '../../Elements/Inputs/LabelInput';
 import ButtonConfirmModal from '../../Elements/Buttons/ButtonConfirmModal';
 import ModalTitle from '../ModalTitle';
+import Transition from '../Transition';
 
 const ActionInstrumentsModal = ({
   open,
@@ -16,20 +30,21 @@ const ActionInstrumentsModal = ({
   data,
 }) => {
   const classes = useStyles();
-  const startValue = {
-    name: '',
-    serial: '',
-  };
+  const startValue = useMemo(
+    () => ({
+      name: '',
+      serial: '',
+    }),
+    []
+  );
 
   const [nameError, setNameError] = useState('');
   const [serialError, setSerialError] = useState('');
   const [instrument, setInstrument] = useState(startValue);
 
   useEffect(() => {
-    if (data) {
-      setInstrument(data);
-    }
-  }, [data]);
+    data ? setInstrument(data) : setInstrument(startValue);
+  }, [data, startValue]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -57,6 +72,10 @@ const ActionInstrumentsModal = ({
     setInstrument(startValue);
   };
 
+  const setValue = (field, value) => {
+    setInstrument({ ...instrument, [field]: value });
+  };
+
   return (
     <Dialog
       fullWidth
@@ -64,6 +83,7 @@ const ActionInstrumentsModal = ({
       onClose={() => setOpen(false)}
       aria-labelledby='customized-dialog-title'
       open={open}
+      TransitionComponent={Transition}
     >
       <form onSubmit={handleSubmit}>
         <ModalTitle onClose={() => setOpen(false)}>
@@ -75,9 +95,7 @@ const ActionInstrumentsModal = ({
               <Grid className={classes.pr20} item xs={6}>
                 <LabelInput
                   value={instrument.name}
-                  setValue={(val) =>
-                    setInstrument({ ...instrument, name: val })
-                  }
+                  setValue={(val) => setValue('name', val)}
                   label='Название'
                   error={nameError}
                 />
@@ -85,13 +103,35 @@ const ActionInstrumentsModal = ({
               <Grid item xs={6}>
                 <LabelInput
                   value={instrument.serial}
-                  setValue={(val) =>
-                    setInstrument({ ...instrument, serial: val })
-                  }
+                  setValue={(val) => setValue('serial', val)}
                   label='Серийный номер'
                   error={serialError}
                 />
               </Grid>
+              <Box width='100%' mt={2}>
+                {instrument.stories?.length ? (
+                  <TableContainer component={Paper}>
+                    <Table size='medium' aria-label='simple table'>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell align='center'>Сотрудник</TableCell>
+                          <TableCell align='center'>Получение</TableCell>
+                          <TableCell align='center'>Сдача</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {instrument.stories.map((el) => (
+                          <TableRow>
+                            <TableCell align='center'>Иван иванов</TableCell>
+                            <TableCell align='center'>22.12.2021</TableCell>
+                            <TableCell align='center'>25.12.2021</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                ) : null}
+              </Box>
             </Grid>
           </Box>
         </DialogContent>

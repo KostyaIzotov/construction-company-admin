@@ -1,38 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 
 import {
-  TableRow,
-  TableHead,
   Paper,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
   TablePagination,
   TableBody,
-  Table,
-  TableCell,
-  TableContainer,
 } from '@mui/material';
-import ButtonAddTable from '../../Elements/Buttons/ButtonAddTable';
-import Spinner from '../../Spinner/Spinner';
-import ActionWorkersModal from '../../Modals/ActionWorkersModal';
-import ConfirmDeleteModal from '../../Modals/ConfirmDeleteModal/ConfirmDeleteModal';
-import Buttondeletetable from '../../Elements/Buttons/ButtonDeleteTable/ButtonDeleteTable';
 
-const WorkersTable = ({
-  getWorkersList,
-  workersList,
-  loadingWorkersList,
-  deleteWorker,
+import Spinner from '../../Spinner/Spinner';
+import Buttondeletetable from '../../Elements/Buttons/ButtonDeleteTable/ButtonDeleteTable';
+import ButtonAddTable from '../../Elements/Buttons/ButtonAddTable';
+import ActionCompaniesModal from '../../Modals/ActionCompaniesModal/ActionCompaniesModal';
+import ConfirmDeleteModal from '../../Modals/ConfirmDeleteModal/ConfirmDeleteModal';
+
+const CompaniesTable = ({
+  companiesList,
+  loadingCompaniesList,
+  getCompaniesList,
+  deleteCompany,
 }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [showModal, setShowModal] = useState(false);
-  const [worker, setWorker] = useState(null);
-  const [workerId, setWorkerId] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [company, setCompany] = useState(null);
+  const [companyId, setCompanyId] = useState(null);
 
   useEffect(() => {
-    getWorkersList();
-  }, [getWorkersList]);
+    getCompaniesList();
+  }, [getCompaniesList]);
 
   const handleChangePage = (_, newPage) => {
     setPage(newPage);
@@ -44,12 +45,12 @@ const WorkersTable = ({
   };
 
   const openModal = (item) => {
-    setWorker(item);
+    setCompany(item);
     setShowModal(true);
   };
 
   const openDeleteModal = (id) => {
-    setWorkerId(id);
+    setCompanyId(id);
     setShowDeleteModal(true);
   };
 
@@ -60,10 +61,8 @@ const WorkersTable = ({
           <Table stickyHeader aria-label='sticky table'>
             <TableHead>
               <TableRow>
-                <TableCell align='center'>Фамилия</TableCell>
-                <TableCell align='center'>Имя</TableCell>
-                <TableCell align='center'>Номер телефона</TableCell>
-                <TableCell align='center'>Кол-во инструментов</TableCell>
+                <TableCell align='center'>Название</TableCell>
+                <TableCell align='center'>Пароль</TableCell>
                 <TableCell
                   sx={{ width: 100, padding: '0 16px' }}
                   align='center'
@@ -73,36 +72,27 @@ const WorkersTable = ({
               </TableRow>
             </TableHead>
             <TableBody>
-              {!loadingWorkersList &&
-                workersList
+              {!loadingCompaniesList &&
+                companiesList
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((worker, i) => {
+                  .map((company, i) => {
                     return (
                       <TableRow
                         key={i}
-                        // key={worker.id}
-                        onClick={() => openModal(worker)}
+                        onClick={() => openModal(company)}
                         sx={{
                           bgcolor: i % 2 === 0 ? '#F0F8FF' : '#F5FFFA',
                           cursor: 'pointer',
                         }}
                         hover
-                        role='checkbox'
-                        tabIndex={-1}
                       >
-                        <TableCell align='center'>{worker.firstName}</TableCell>
-                        <TableCell align='center'>
-                          {worker.secondName}
-                        </TableCell>
-                        <TableCell align='center'>{worker.phone}</TableCell>
-                        <TableCell align='center'>
-                          {worker.partsCount} шт.
-                        </TableCell>
+                        <TableCell align='center'>{company.name}</TableCell>
+                        <TableCell align='center'>{company.password}</TableCell>
                         <TableCell align='center'>
                           <Buttondeletetable
                             actionFn={(e) => {
                               e.stopPropagation();
-                              openDeleteModal(worker.id);
+                              openDeleteModal(company.id);
                             }}
                           />
                         </TableCell>
@@ -116,37 +106,37 @@ const WorkersTable = ({
           labelRowsPerPage='Кол-во записей на странице:'
           rowsPerPageOptions={[10, 25, 100]}
           component='div'
-          count={workersList.length}
+          count={companiesList.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <Spinner loading={loadingWorkersList} />
-      <ActionWorkersModal
-        data={worker}
+      {loadingCompaniesList && <Spinner loading={loadingCompaniesList} />}
+      <ActionCompaniesModal
         open={showModal}
         setOpen={setShowModal}
+        data={company}
       />
       <ConfirmDeleteModal
         open={showDeleteModal}
         setOpen={setShowDeleteModal}
-        id={workerId}
-        deleteItem={deleteWorker}
+        id={companyId}
+        deleteItem={deleteCompany}
       />
     </>
   );
 };
 
-const mapState = ({ workers: { workersList, loadingWorkersList } }) => ({
-  workersList,
-  loadingWorkersList,
+const mapState = ({ companies: { companiesList, loadingCompaniesList } }) => ({
+  companiesList,
+  loadingCompaniesList,
 });
 
-const mapDispatch = (dispatch) => ({
-  getWorkersList: () => dispatch.workers.getWorkersList(),
-  deleteWorker: (id) => dispatch.workers.deleteWorker(id),
+const mapDispatch = ({ companies }) => ({
+  getCompaniesList: () => companies.getCompaniesList(),
+  deleteCompany: (id) => companies.deleteCompany(id),
 });
 
-export default connect(mapState, mapDispatch)(WorkersTable);
+export default connect(mapState, mapDispatch)(CompaniesTable);

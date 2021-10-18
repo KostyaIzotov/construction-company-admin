@@ -45,10 +45,10 @@ const Header = ({ isOpenDrawer, toggleShowLayout }) => {
   const getExistPageName = () => {
     const { pathname: path } = location;
     if (path === '/') {
-      setPageName('Главная');
+      setPageName('Компании');
     } else if (path === '/instruments') {
       setPageName('Инструменты');
-    } else if (path === '/employees') {
+    } else if (path === '/workers') {
       setPageName('Работники');
     }
   };
